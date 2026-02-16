@@ -231,4 +231,3 @@ docker-compose restart synapse-NOMCOGNOM
 * [Documentació oficial de Synapse](https://matrix.org/docs/projects/server/synapse)
 * [Documentació oficial d'Element](https://element.io/docs)
 * [Matrix Specification](https://spec.matrix.org/)
-  Ara tens un servidor Matrix completament funcional amb Docker, amb la seguretat d'E2EE i amb un client Element per interactuar amb ell. Amb aquesta infraestructura, pots començar a utilitzar Matrix per a la teva comunicació privada i segura.
