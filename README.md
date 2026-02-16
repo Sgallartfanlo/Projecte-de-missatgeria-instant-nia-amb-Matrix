@@ -273,4 +273,3 @@ Contesta les qüestions i realitza els exercicis opcionals.
 ## Conclusió
 
 Amb aquesta pràctica, has aconseguit desplegar un servidor Matrix completament funcional amb Docker, configurar la seguretat amb E2EE, i personalitzar la configuració amb el teu nom. Això et permetrà tenir un control total sobre la teva missatgeria i mantenir la teva comunicació privada i segura.
-```
