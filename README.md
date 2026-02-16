@@ -1,66 +1,25 @@
-# Pràctica: Servidor de Missatgeria Matrix amb Docker
-
-## Objectius
-
-En aquesta pràctica aprendràs a:
-
-- Desplegar un servidor Matrix (Synapse) amb Docker
-- Configurar un homeserver personalitzat amb el teu nom
-- Instal·lar i utilitzar el client Element
-- Crear usuaris i sales de xat
-- Verificar xifrat d'extrem a extrem (E2EE)
-- Configurar federació (opcional)
-- Documentar la instal·lació i configuració
-
-## Requisits
-
-**Programari necessari:**
-- Docker Desktop o Docker Engine
-- Docker Compose
-- Navegador web modern
-- Editor de text (VS Code, Notepad++, nano)
-
-**Coneixements previs:**
-- Conceptes de missatgeria instantània
-- Docker i contenidors
-- Protocols de xarxa bàsics
-
-## Què és Matrix?
-
-Matrix és un protocol obert de comunicació en temps real, pensat per a xat, veu i vídeo, que destaca per ser descentralitzat i federat.
-
-### Com funciona Matrix?
-
-- Hi ha servidors (homeservers)
-- Hi ha clients
-- Els servidors es federen entre ells
-
-Exemple d'usuari: `@usuari:exemple.cat`
-
-### Components principals
-
-- **Homeserver**: El servidor Matrix que gestiona els usuaris i les sales.
-  - Exemples: Synapse, Dendrite, Conduit
-- **Client**: L'aplicació que utilitza l'usuari per connectar-se al servidor.
-  - Exemples: Element, FluffyChat, Nheko
-- **Sales (Rooms)**: Espais on es duen a terme les converses.
-  - Exemple: `!abc123:exemple.cat`
-
-## Part 1: Preparació de l'Entorn
-
-### Pas 1.1: Crear estructura de directoris
-
-Crea un directori de treball personalitzat amb el teu nom i cognom:
-
+````markdown
+# Servidor de Missatgeria Matrix amb Docker
+Aquest projecte desplega un servidor de missatgeria Matrix utilitzant Docker i Docker Compose. Es fa servir Synapse com a homeserver i Element com a client web per interactuar amb el servidor.
+## Requisits previs
+Abans de començar, assegura't que tens instal·lat el següent:
+- **Docker** i **Docker Compose**: Per gestionar els contenidors.
+- **Un navegador web modern**: Per accedir al client web Element.
+- **Un editor de text** (per exemple, VS Code, Notepad++, nano): Per editar fitxers de configuració.
+## Passos per posar en marxa el projecte
+### 1. Crear l'estructura de directoris
+Crea un directori de treball personalitzat per al projecte i entra dins d'ell:
 ```bash
 mkdir -p ~/matrix-NOMCOGNOM
 cd ~/matrix-NOMCOGNOM
 mkdir -p data config
 ````
 
-### Pas 1.2: Generar fitxer de configuració inicial
+Substitueix `NOMCOGNOM` pel teu nom i cognom (tot en minúscules).
 
-Utilitzarem el contenidor oficial de Synapse per generar una configuració base:
+### 2. Generar la configuració inicial de Synapse
+
+Utilitza el contenidor oficial de Synapse per generar la configuració base:
 
 ```bash
 docker run -it --rm \
@@ -70,13 +29,11 @@ docker run -it --rm \
   matrixdotorg/synapse:latest generate
 ```
 
-Això crearà `data/homeserver.yaml` amb la configuració base.
+Això generarà un fitxer `homeserver.yaml` dins del directori `data`.
 
-## Part 2: Configuració de Synapse
+### 3. Editar la configuració de Synapse
 
-### Pas 2.1: Editar `homeserver.yaml`
-
-Edita el fitxer generat `data/homeserver.yaml` i personalitza els següents paràmetres:
+Obre el fitxer `data/homeserver.yaml` i personalitza els següents paràmetres:
 
 ```yaml
 server_name: "matrix.NOMCOGNOM.local"
@@ -102,9 +59,9 @@ max_upload_size: 50M
 log_config: "/data/matrix.NOMCOGNOM.local.log.config"
 ```
 
-### Pas 2.2: Configurar logs
+### 4. Configurar logs
 
-Edita el fitxer `data/matrix.NOMCOGNOM.local.log.config` per configurar el registre d'activitat:
+Obre el fitxer `data/matrix.NOMCOGNOM.local.log.config` i ajusta la configuració dels logs:
 
 ```yaml
 version: 1
@@ -128,13 +85,13 @@ root:
   handlers: [console, file]
 ```
 
-## Part 3: Docker Compose
+### 5. Crear el fitxer `docker-compose.yml`
 
-### Pas 3.1: Crear `docker-compose.yml`
-
-Crea el fitxer `docker-compose.yml` personalitzat:
+Crea el fitxer `docker-compose.yml` amb la següent configuració:
 
 ```yaml
+version: '3'
+
 services:
   synapse-NOMCOGNOM:
     image: matrixdotorg/synapse:latest
@@ -150,6 +107,7 @@ services:
     restart: unless-stopped
     networks:
       - matrix-network
+
   element-NOMCOGNOM:
     image: vectorim/element-web:latest
     container_name: matrix-element-NOMCOGNOM
@@ -162,14 +120,15 @@ services:
       - synapse-NOMCOGNOM
     networks:
       - matrix-network
+
 networks:
   matrix-network:
     driver: bridge
 ```
 
-### Pas 3.2: Configurar Element
+### 6. Configurar Element
 
-Crea el fitxer `config/element-config.json` personalitzat:
+Crea el fitxer `config/element-config.json` amb la següent configuració:
 
 ```json
 {
@@ -195,81 +154,81 @@ Crea el fitxer `config/element-config.json` personalitzat:
 }
 ```
 
-## Part 4: Desplegament i Verificació
+### 7. Iniciar els contenidors
 
-### Pas 4.1: Iniciar els serveis
+Inicia els contenidors amb Docker Compose:
 
 ```bash
 docker-compose up -d
+```
+
+Verifica que els contenidors estiguin actius:
+
+```bash
 docker-compose ps
 ```
 
-### Pas 4.2: Verificar logs
+Deuries veure que tant el servidor Synapse com el client Element estan en funcionament.
 
-```bash
-docker-compose logs synapse-NOMCOGNOM
-docker-compose logs -f synapse-NOMCOGNOM
-```
+### 8. Accedir a Element
 
-### Pas 4.3: Accedir a Element
-
-Obre el navegador i accedeix a:
+Obre un navegador i accedeix a la següent URL per obrir el client web Element:
 
 ```
 http://matrix.NOMCOGNOM.local:8080
 ```
 
-## Part 5: Creació d'Usuaris
+### 9. Registrar el primer usuari (admin)
 
-### Pas 5.1: Registrar el primer usuari (admin)
+A la interfície web d'Element, clica "Create Account" i registra el teu primer usuari com a administrador. Utilitza el teu nom o el que vulguis per al nom d'usuari.
 
-A la interfície d'Element, clica "Create Account" i registra't com a admin.
+### 10. Crear usuaris addicionals
 
-### Pas 5.2: Crear usuaris addicionals
-
-Crea almenys 2 usuaris més per provar la missatgeria.
-
-## Part 6: Proves de Funcionalitat
-
-### Pas 6.1: Crear una sala de xat
-
-Crea una sala de xat amb E2EE activat.
-
-### Pas 6.2: Convidar altres usuaris
-
-Invita els usuaris creats a la sala.
-
-### Pas 6.3: Provar missatgeria E2EE
-
-Verifica el xifrat E2EE i envia missatges entre usuaris.
-
-## Part 7: Funcionalitats Avançades
-
-* **Compartir fitxers**
-* **Formatar missatges**
-* **Reaccions i respostes**
-
-## Part 8: Administració del Servidor
-
-### Pas 8.1: Desactivar registre obert
-
-Desactiva el registre públic editant el fitxer `homeserver.yaml`.
-
-### Pas 8.2: Consultar base de dades
-
-Explora la base de dades SQLite amb les comandes SQL.
-
-### Pas 8.3: Monitoritzar recursos
+Des de la interfície d'Element o des del terminal, crea almenys dos usuaris més per provar la missatgeria:
 
 ```bash
-docker stats
-tail -f data/homeserver.log
+docker exec -it matrix-synapse-NOMCOGNOM \
+  register_new_matrix_user \
+  http://matrix.NOMCOGNOM.local:8008 \
+  -c /data/homeserver.yaml \
+  -u NOMCOGNOM-user1 \
+  -p ContraForta123! \
+  --admin
 ```
 
-## Qüestions i Exercicis
+### 11. Crear una sala de xat
 
-Contesta les qüestions i realitza els exercicis opcionals.
+Des de la interfície d'Element, crea una nova sala de xat amb la configuració següent:
 
-## Conclusió
+* **Nom de la sala**: Sala de NOMCOGNOM
+* **Visibilitat**: Private
+* **Activar xifrat E2EE**: Activat
 
-Amb aquesta pràctica, has aconseguit desplegar un servidor Matrix completament funcional amb Docker, configurar la seguretat amb E2EE, i personalitzar la configuració amb el teu nom. Això et permetrà tenir un control total sobre la teva missatgeria i mantenir la teva comunicació privada i segura.
+### 12. Convidar altres usuaris a la sala
+
+Invita els usuaris que has creat a la sala que acabes de crear.
+
+### 13. Verificar el xifrat E2EE
+
+Verifica que el xifrat d'extrem a extrem (E2EE) estigui activat i que els missatges siguin segurs.
+
+### 14. Desactivar el registre obert (opcional)
+
+Després de crear els usuaris necessaris, desactiva el registre públic al fitxer `homeserver.yaml`:
+
+```yaml
+enable_registration: false
+```
+
+Reinicia el contenidor Synapse per aplicar els canvis:
+
+```bash
+docker-compose restart synapse-NOMCOGNOM
+```
+
+## Recursos addicionals
+
+* [Documentació oficial de Synapse](https://matrix.org/docs/projects/server/synapse)
+* [Documentació oficial d'Element](https://element.io/docs)
+* [Matrix Specification](https://spec.matrix.org/)
+  Ara tens un servidor Matrix completament funcional amb Docker, amb la seguretat d'E2EE i amb un client Element per interactuar amb ell. Amb aquesta infraestructura, pots començar a utilitzar Matrix per a la teva comunicació privada i segura.
