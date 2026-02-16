@@ -1,6 +1,3 @@
-Aquí tens el fitxer `README.md` complet per al projecte de servidor de missatgeria Matrix amb Docker:
-
-````markdown
 # Pràctica: Servidor de Missatgeria Matrix amb Docker
 
 ## Objectius
@@ -276,8 +273,4 @@ Contesta les qüestions i realitza els exercicis opcionals.
 ## Conclusió
 
 Amb aquesta pràctica, has aconseguit desplegar un servidor Matrix completament funcional amb Docker, configurar la seguretat amb E2EE, i personalitzar la configuració amb el teu nom. Això et permetrà tenir un control total sobre la teva missatgeria i mantenir la teva comunicació privada i segura.
-
-```
-
-Aquest fitxer `README.md` proporciona una guia completa per posar en marxa un servidor de missatgeria Matrix amb Docker. Inclou totes les parts de la pràctica, des de la preparació inicial fins a la configuració avançada, incloent la creació d'usuaris i sales, verificació de seguretat, i proves de funcionalitat.
 ```
