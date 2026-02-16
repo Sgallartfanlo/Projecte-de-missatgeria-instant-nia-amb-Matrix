@@ -1,4 +1,4 @@
-````markdown
+
 # Servidor de Missatgeria Matrix amb Docker
 Aquest projecte desplega un servidor de missatgeria Matrix utilitzant Docker i Docker Compose. Es fa servir Synapse com a homeserver i Element com a client web per interactuar amb el servidor.
 ## Requisits previs
