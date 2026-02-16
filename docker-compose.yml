@@ -1,0 +1,44 @@
+services:
+  # PERSONALITZA: Nom del servei amb el teu nom
+  synapse-sergigallart:
+    image: matrixdotorg/synapse:latest
+    container_name: matrix-synapse-sergigallart
+
+    ports:
+      - "8008:8008"    # Client API i Federation
+
+    volumes:
+      - ./data:/data
+
+    environment:
+      - SYNAPSE_SERVER_NAME=matrix.sergigallart.local
+      - SYNAPSE_REPORT_STATS=no
+      - TZ=Europe/Madrid
+
+    restart: unless-stopped
+
+    networks:
+      - matrix-network
+
+  # Cliente Element Web - PERSONALITZAT
+  element-sergigallart:
+    image: vectorim/element-web:latest
+    container_name: matrix-element-sergigallart
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./config/element-config.json:/app/config.json:ro
+
+    restart: unless-stopped
+
+    depends_on:
+      - synapse-sergigallart
+
+    networks:
+      - matrix-network
+
+networks:
+  matrix-network:
+    driver: bridge
