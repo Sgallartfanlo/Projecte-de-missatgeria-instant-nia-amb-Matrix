@@ -231,3 +231,4 @@ docker-compose restart synapse-NOMCOGNOM
 * [Documentació oficial de Synapse](https://matrix.org/docs/projects/server/synapse)
 * [Documentació oficial d'Element](https://element.io/docs)
 * [Matrix Specification](https://spec.matrix.org/)
+* [Pràctica Original i Apunts](https://www.asixsapa.cat/missatgeria/practiques/practica_matrix_docker/)
